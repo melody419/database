@@ -11,7 +11,7 @@
 	</head>
 	<body>
 		<div id="allTheThings">
-			<a href="user.php">
+			<a href="Customer_list.php">
 				<input type="button" value="Customer list." />
 			</a><br />
 			<a href="register.php">

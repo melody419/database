@@ -131,26 +131,7 @@ if (isset($_POST['b_return']) ) {
 			header('Location: my_books.php');
 		}
 	}
-/*
-	if ($books > 0) {
-		echo '<script>
-				document.getElementById("success").innerHTML = "Successfully returned ' . $books . ' books";
-				document.getElementById("success-message").style.display = "block";
-			  </script>';
 
-		$query = $con->prepare("SELECT balance FROM member WHERE username = ?;");
-		$query->bind_param("s", $_SESSION['username']);
-		$query->execute();
-		$balanceResult = $query->get_result();
-		$balanceRow = $balanceResult->fetch_assoc();
-		$balance = (int)$balanceRow['balance'];
-
-		if ($balance < 0) {
-			header("Location: ../logout.php");
-		}
-	} else {
-		echo error_without_field("Please select a book to return");
-	}*/
 }
 ?>
 

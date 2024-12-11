@@ -15,7 +15,8 @@ require "header_member.php";
 	<link rel="stylesheet" type="text/css" href="../css/custom_radio_button_style.css">
 </head>
 <body>
-	<?php
+<?php
+	ob_start();
 	$query = $con->prepare("SELECT * FROM book ORDER BY title");
 	$query->execute();
 	$result = mysqli_stmt_get_result($query);
@@ -130,32 +131,15 @@ require "header_member.php";
 							$query->bind_param("ss", $_SESSION['username'], $selectedBook);
 							if (!$query->execute()) {
 								echo error_without_field("ERROR: Couldn't request book");
-							} else {
+							} else {							
 								echo success("Book successfully requested. You will be notified by email when the book is issued to your account");
 							}
-							/*	
-							$query = $con->prepare("UPDATE book SET copies = ? WHERE username = ?");
-							$query->bind_param("s", $selectedBook);
-							$query->execute();
-							$copies = mysqli_fetch_assoc(mysqli_stmt_get_result($query))['copies'];
-							$sql = "UPDATE book SET copies = ? WHERE username = ?";
-
-							if ($memberBalance < $bookPrice) {
-								echo error_without_field("You do not have sufficient balance to issue this book");
-							} else {
-								$query = $con->prepare("INSERT INTO borrowedbooks(member, book_isbn) VALUES(?, ?)");
-								$query->bind_param("ss", $_SESSION['username'], $selectedBook);
-								if (!$query->execute()) {
-									echo error_without_field("ERROR: Couldn't request book");
-								} else {
-									echo success("Book successfully requested. You will be notified by email when the book is issued to your account");
-								}
-							}*/
+							
 						}
-					
-				// }
+									
 			}
 		}
+		header("Refresh:0");
 	}
 	if (isset($_POST['m_favor'])) {
              // 提取結果
@@ -169,7 +153,7 @@ require "header_member.php";
 			echo success("You have successfully added this book to your collection.");
 		}
 	}
-					
+	ob_end_flush();
 				// }
 			
 		

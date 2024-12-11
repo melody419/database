@@ -65,6 +65,24 @@ if (isset($_POST['b_delete']) ) {
 	for ($i = 0; $i < $rows; $i++) {
 		if (isset($_POST["cb_user{$i}"])) {
 			$username = $_POST["cb_user{$i}"];
+			$query = $con->prepare("SELECT book_isbn FROM borrowedbooks WHERE member = ?;");
+			$query->bind_param("s", $username);
+			$query->execute();
+			$result = $query->get_result();
+			while ($row = $result->fetch_assoc()) {
+				$book_isbn = $row['book_isbn'];
+				$update_query = $con->prepare("UPDATE book SET copies = copies + 1 WHERE isbn = ?;");
+				$update_query->bind_param("s", $book_isbn);
+				$update_query->execute();
+				$update_query->close();
+			}
+			$query->close();
+			/*
+			$delete_query = $con->prepare("DELETE FROM borrowedbooks WHERE member = ?;");
+			$delete_query->bind_param("s", $username);
+			$delete_query->execute();
+			$delete_query->close();*/
+
 			$query = $con->prepare("DELETE FROM member WHERE username = ?;");
 			$query->bind_param("s", $username);
 			if (!$query->execute()) {
