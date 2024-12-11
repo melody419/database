@@ -1,0 +1,17 @@
+/*----------Custom Icons----------*/
+.cd-form .icon input{
+  padding-left: 54px !important; /*才不會擋到logo*/
+}
+.cd-form .m-user {
+  /*background: url("../img/ic_member_username.svg") no-repeat 16px center;*/
+}
+/*用戶名圖標定位在距離左側 16 像素和垂直居中的位置，必填標記圖標定位在右上角*/
+.cd-form [required].m-user {
+  background: url("../img/ic_member_username.svg") no-repeat 16px center, url("../img/ic_required.svg") no-repeat top right;
+}
+.cd-form .m-pass {
+  /*background: url("../img/ic_member_username.svg") no-repeat 16px center;*/
+}
+.cd-form [required].m-pass {
+  background: url("../img/ic_member_pass.svg") no-repeat 16px center, url("../img/ic_required.svg") no-repeat top right;
+}

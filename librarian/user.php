@@ -1,0 +1,81 @@
+<?php
+declare(strict_types=1);
+
+require "../db_connect.php";
+require "../message_display.php";
+require "verify_librarian.php";
+require "header_librarian.php";
+?>
+
+<html>
+<head>
+	<title>Users</title>
+	<link rel="stylesheet" type="text/css" href="../css/global_styles.css">
+	<link rel="stylesheet" type="text/css" href="../css/custom_checkbox_style.css">
+	<link rel="stylesheet" type="text/css" href="../member/css/my_books_style.css">
+</head>
+<body>
+
+<?php
+$query = $con->prepare("SELECT * FROM member");
+$query->execute();
+$result = $query->get_result();
+$rows = $result->num_rows;
+if ($rows === 0) {
+	echo "<h2 align='center'>No users found.</h2>";
+} else {
+	echo "<form class='cd-form' method='POST' action='#'>";
+	echo "<legend>Users</legend>";
+	echo "<div class='success-message' id='success-message'>
+			<p id='success'></p>
+		  </div>";
+	echo "<div class='error-message' id='error-message'>
+			<p id='error'></p>
+		  </div>";
+	echo "<table width='100%' cellpadding='10' cellspacing='10'>
+			<tr>
+				<th></th>
+				<th>Username<hr></th>
+				<th>name<hr></th>
+				<th>Email<hr></th>
+				<th>Balance<hr></th>
+			</tr>";
+
+	$i = 0;
+	while ($row = mysqli_fetch_assoc($result)) {
+		echo "<tr>
+				<td>
+					<label class='control control--checkbox'>
+						<input type='checkbox' name='cb_user{$i}' value='{$row['username']}'>
+						<div class='control__indicator'></div>
+					</label>
+				</td>";
+		echo "<td>{$row['username']}</td>";	
+		echo "<td>{$row['name']}</td>";
+		echo "<td>{$row['email']}</td>";
+		echo "<td>{$row['balance']}</td>";
+		$i++;
+	}
+	echo "</table><br />";
+	echo "<input type='submit' name='b_delete' value='Delete selected users' />";
+	echo "</form>";
+}
+
+if (isset($_POST['b_delete']) ) {
+	for ($i = 0; $i < $rows; $i++) {
+		if (isset($_POST["cb_user{$i}"])) {
+			$username = $_POST["cb_user{$i}"];
+			$query = $con->prepare("DELETE FROM member WHERE username = ?;");
+			$query->bind_param("s", $username);
+			if (!$query->execute()) {
+				die(error_without_field("ERROR: Couldn't delete the user"));
+			}
+			$query->close();
+		}
+	}
+	header("Refresh:0");
+}
+?>
+
+</body>
+</html>

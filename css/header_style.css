@@ -1,0 +1,91 @@
+/*這些設置確保了所有元素在計算寬度和高度時都包括內邊距和邊框，從而避免了不同瀏覽器之間的差異*/
+html * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *:after, *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 100%;/* 設置字體大小為瀏覽器的默認大小*/
+  font-family: "Open Sans", sans-serif;/*設置字體為 "Open Sans"，如果該字體不可用，則使用 sans-serif 字體*/
+  background-color: rgb(230, 223, 215);
+  margin: 0;/*移除所有默認的外邊距*/
+}
+
+img {
+  max-width: 100%;
+}
+
+header {
+  position: relative;
+  height: 80px; /* 增加高度 */
+  background: #ffffff;
+  /*border-bottom: 2px solid #301602; /* 設置下邊界的線，顏色為 #ccc */
+}
+
+header #cd-logo {
+  float: left;/*將元素浮動到左邊，這樣可以使其他內容環繞在其右側*/
+  margin: 0 0 0 5%;/*設置元素的外邊距，分別為上、右、下、左。這裡左邊距設置為 5%*/
+  /* reduce logo size on mobile and make sure it is left aligned with the transform-origin property */
+  -webkit-transform-origin: 0 50%;
+  -moz-transform-origin: 0 50%;
+  -ms-transform-origin: 0 50%;
+  -o-transform-origin: 0 50%;
+  transform-origin: 0 50%;
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  -o-transform: scale(0.8);
+  transform: scale(0.8);
+}
+
+header #cd-logo img , header #cd-logo p{
+  display: inline-block;/*將 img 和 p 元素設置為行內塊級元素，這樣它們可以在同一行顯示*/
+  vertical-align: middle;
+
+}
+
+header #cd-logo img{
+  margin-top: 4px;/*設置上邊距為 5 像素*/
+  width: 155px; /* 設置圖片的寬度 */
+  height: 60px; /* 設置圖片的高度 */
+} 
+
+header #cd-logo p{
+	color: #301602;/*設置文字顏色為 #d75069（紅色）*/
+	font-weight: bold;/*設置文字為粗體*/
+	font-size: 1.4rem;
+}
+
+/*是一個 CSS 偽元素選擇器，用於在 header 元素的內容之後插入內容*/
+header::after {
+  /* clearfix */
+  content: '';/*生成一個空的內容*/
+  display: table;/* 將生成的內容設置為表格顯示*/
+  clear: both;/*清除浮動，確保 header 元素包含其內部的浮動元素*/
+}
+
+header a{
+	text-decoration: none;/*移除超連結的下劃線*/
+}
+
+/*這些樣式確保了在螢幕寬度至少為 768 像素的設備上
+header 元素的高度增加到 80 像素，並且 #cd-logo 元素的大小恢復到原始大小，且有適當的外邊距*/
+@media only screen and (min-width: 768px) {
+  header {
+    height: 80px;
+  }
+  header #cd-logo {
+    margin: 4px 0 0 5%;
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1);
+  }
+}

@@ -1,0 +1,40 @@
+#allTheThings {
+  width: 90%;
+  max-width: 800px;
+  text-align: center;
+  margin: 8em auto;
+  font-size: 1.3rem;
+  color: #301602;
+  display: block;
+}
+
+a{ 
+	color: #301602;
+	text-decoration: none;
+}
+
+#member{
+	display: inline-block;
+}
+
+#verticalLine {
+	display: inline-block;
+	margin-left: 20px;/*設置左邊距為 20 像素*/
+    /*border-left: solid #301602;/* 設置左邊框為實線，顏色為 #343642（深灰色）。*/
+}
+
+#librarian-link{
+	margin-left: 20px;
+}
+
+/*當元素的狀態改變時（例如滑鼠懸停），所有可過渡的屬性都會在 0.2 秒內以 ease-in-out 的方式進行過渡*/
+#member, #librarian
+{
+	transition: all .5s ease-in-out;
+}
+
+/*transform: scale(1.1);: 當滑鼠懸停在 #member 或 #librarian 元素上時，將元素縮放到原來的 1.1 倍*/
+#member:hover, #librarian:hover
+{
+	transform: scale(1.1);
+}

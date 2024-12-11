@@ -1,0 +1,149 @@
+/*這些設置確保了所有元素在計算寬度和高度時都包括內邊距和邊框，從而避免了不同瀏覽器之間的差異*/
+html * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *:after, *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 100%;/* 設置字體大小為瀏覽器的默認大小*/
+  font-family: "Open Sans", sans-serif;/*設置字體為 "Open Sans"，如果該字體不可用，則使用 sans-serif 字體*/
+  background-color: rgb(230, 223, 215);
+  margin: 0;/*移除所有默認的外邊距*/
+}
+
+img {
+  max-width: 100%;
+}
+
+header {
+  position: relative;
+  height: 80px; /* 增加高度 */
+  background: #ffffff;
+  /*border-bottom: 2px solid #301602; /* 設置下邊界的線，顏色為 #ccc */
+}
+
+header #cd-logo {
+  float: left;/*將元素浮動到左邊，這樣可以使其他內容環繞在其右側*/
+  margin: 0 0 0 5%;/*設置元素的外邊距，分別為上、右、下、左。這裡左邊距設置為 5%*/
+  /* reduce logo size on mobile and make sure it is left aligned with the transform-origin property */
+  -webkit-transform-origin: 0 50%;
+  -moz-transform-origin: 0 50%;
+  -ms-transform-origin: 0 50%;
+  -o-transform-origin: 0 50%;
+  transform-origin: 0 50%;
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  -o-transform: scale(0.8);
+  transform: scale(0.8);
+}
+
+header #cd-logo img , header #cd-logo p{
+  display: inline-block;
+  vertical-align: middle;
+}
+
+header #cd-logo img{
+  margin-top: 4px;/*設置上邊距為 5 像素*/
+  width: 155px; /* 設置圖片的寬度 */
+  height: 60px; /* 設置圖片的高度 */
+} 
+
+header #cd-logo p{
+	color: #301602; /*設置文字顏色為 #d75069（紅色）*/
+	font-weight: bold;/*設置文字為粗體*/
+	font-size: 1.4rem;
+}
+
+/*header #cd-logo p{
+	font-size: 2.2rem !important;
+	color: #d75069;
+	font-weight: bold;
+	font-size: 1.4rem;
+}*/
+
+header::after {
+  /* clearfix */
+  content: '';
+  display: table;
+  clear: both;
+}
+
+header a{
+	text-decoration: none;
+}
+
+@media only screen and (min-width: 768px) {
+  header {
+    height: 80px;
+  }
+  header #cd-logo {
+    margin: 4px 0 0 5%;
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+.dropbtn {
+  border-radius: .45em;
+	background-image: url("/Library/member/img/ic_member.svg");
+  background-position: 10px center;
+  background-repeat: no-repeat;
+  background-color: #9f685bba;
+	margin-top: 10%;
+    color: white;
+	min-width: 120px;
+    padding: 0 8px 0 5px;
+    font-size: 16px;
+	font-family: "Open Sans", sans-serif;
+    border: none;
+    cursor: pointer;
+}
+
+
+#librarian-name{
+	margin-left: 32px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+	float: right;
+	margin-right: 5%;
+}
+
+.dropdown-content {
+    display: none;
+	right: 0;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+	font-size: 1.6rem;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #46342b;
+}
