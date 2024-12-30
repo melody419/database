@@ -27,14 +27,27 @@ a{
 	margin-left: 20px;
 }
 
-/*當元素的狀態改變時（例如滑鼠懸停），所有可過渡的屬性都會在 0.2 秒內以 ease-in-out 的方式進行過渡*/
-#member, #librarian
-{
+#member {
 	transition: all .5s ease-in-out;
+	background-image: linear-gradient(120deg, #64553d 0%, #64553d 50%, rgb(230, 223, 215) 50%);
+	background-size: 215%;
+	background-position: 100%; /* 預設從右開始，對稱於 #librarian */
+	transition: all .5s;
 }
 
-/*transform: scale(1.1);: 當滑鼠懸停在 #member 或 #librarian 元素上時，將元素縮放到原來的 1.1 倍*/
-#member:hover, #librarian:hover
-{
+#librarian {
+	background-image: linear-gradient(120deg, rgb(230, 223, 215) 0%, rgb(230, 223, 215) 50%, #64553d 50%);
+	background-size: 215%;
+	background-position: 0%; /* 預設從左開始 */
+	transition: all .5s;
+}
+
+#member:hover {
 	transform: scale(1.1);
+	background-position: 0%; /* 滑鼠懸停時移到左上，對稱於 #librarian */
+}
+
+#librarian:hover {
+	transform: scale(1.1);
+	background-position: 100%; /* 滑鼠懸停時移到右上，對稱於 #member */
 }

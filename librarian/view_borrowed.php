@@ -17,6 +17,7 @@ require "header_librarian.php";
 <body>
 
 <?php
+ob_start();
 $query = $con->prepare("SELECT * FROM borrowedbooks");
 $query->execute();
 $result = $query->get_result();
@@ -25,7 +26,7 @@ if ($rows === 0) {
 	echo "<h2 align='center'>A book that has not been borrowed.</h2>";
 } else {
 	echo "<form class='cd-form' method='POST' action='#'>";
-	echo "<legend>borrowedbooks</legend>";
+	echo "<legend>Borrowed books</legend>";
 	echo "<div class='success-message' id='success-message'>
 			<p id='success'></p>
 		  </div>";
@@ -93,13 +94,13 @@ if (isset($_POST['b_return']) ) {
 			if (!$query->execute()) {
 				die(error_without_field("ERROR: Couldn't return the books"));
 			}
-			$query = $con->prepare("SELECT balance FROM member WHERE username = ?");
+			$query = $con->prepare("SELECT balance FROM member WHERE account = ?");
 			$query->bind_param("s", $m_name);
 			$query->execute();
 			$memberBalance = mysqli_fetch_assoc(mysqli_stmt_get_result($query))['balance'];
 			$query->close();
 			$memberBalance=$memberBalance+1;
-			$query = $con->prepare("UPDATE member SET balance = ? WHERE username = ?");
+			$query = $con->prepare("UPDATE member SET balance = ? WHERE account = ?");
 			$query->bind_param("is", $memberBalance, $m_name);
 			$query->execute();
 			$query->close(); // ?????
@@ -116,7 +117,10 @@ if (isset($_POST['b_return']) ) {
 			$query->close();
 		}
 	}
+	header("Location: " . $_SERVER['REQUEST_URI']);
+	exit(); // 停止腳本執行
 }
+ob_end_flush();
 ?>
 
 </body>

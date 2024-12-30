@@ -32,13 +32,13 @@
 	left: 0;
 	width: 20px;
 	height: 20px;
-	background: #e6e6e6;
+	background: #bababa;
 }
 
 /* Hover and focus states */
 .control:hover input ~ .control__indicator,
 .control input:focus ~ .control__indicator {
-	background: #cccccc;
+	background: #858484;
 }
 
 /* Checked state */
@@ -46,7 +46,7 @@
 	-webkit-animation: cd-bounce 0.3s;
 	-moz-animation: cd-bounce 0.3s;
 	animation: cd-bounce 0.3s;
-	background: #d75069;
+	background: #c5886c;
 }
 
 /* Disabled state */

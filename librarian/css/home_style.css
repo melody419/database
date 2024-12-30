@@ -1,61 +1,109 @@
 html {
-  font-size: 68.5%;
-}
-
-body{
-	font-family: "Open Sans", sans-serif;
-}
-
-p {
-	font-size: 95.5%;
+	font-size: 62.5%;
   }
   
-
-#allTheThings{
-	width: 90%;
-	max-width: 600px;
-	margin: 4em auto;
-	font-size: 1.9rem;
-	color: #94aab0;
-	margin-bottom: 10px;
-	display: block;
-}
-
-#allTheThings input[type="button"] {
-	width: 100%;
-	border: none;
-	background: #9f685bba;
-	border-radius: .25em;
-	padding: 16px 20px;
-	margin-bottom: 20px;
+  body{
+	  font-family: "Open Sans", sans-serif;
+	  
+  }
+  
+  #allTheThings {
+	  display: flex;
+	  flex-wrap: wrap;	  
+	  justify-content: center; 
+	  align-items: center; 		
+	  height: 70vh;   
+	}
+	
+	#allTheThings div {
+	  flex: 1 1 calc(33.333% - 20px); 	  box-sizing: border-box; }
+	
+	#allTheThings input[type="button"] {
+	  width: 220px;
+	  height: 220px; 
+	  background: #9f685bba;
+	  border-radius: .25em;
+	  padding: 16px 20px;
+	  color: #3c221cba;
+	  font-weight: bold;
+	  font-family: "Open Sans", sans-serif;
+	  font-size: 1.6rem;
+	  cursor: pointer;
+	  -webkit-font-smoothing: antialiased;
+	  -moz-osx-font-smoothing: grayscale;
+	  -webkit-appearance: none;
+	  -moz-appearance: none;
+	  -ms-appearance: none;
+	  -o-appearance: none;
+	  appearance: none;		
+	  text-align: center; 	  
+	  margin: 80px 80px 20px 130px; 	
+	}
+  
+	#allTheThings .button-with-image{
+	  width: 220px;
+	  height: 220px; 	  border: none;
+	  background: url('/Library/img/ic_logo_brown.svg') no-repeat center center !important;
+	  background-size: 320px 320px !important; 
+	  padding: 16px 20px;
+	  color: #522525;
+	  font-weight: bold;
+	  font-family: "Open Sans", sans-serif;
+	  font-size: 1.6rem;
+	  cursor: pointer;
+	  -webkit-font-smoothing: antialiased;
+	  -moz-osx-font-smoothing: grayscale;
+	  -webkit-appearance: none;
+	  -moz-appearance: none;
+	  -ms-appearance: none;
+	  -o-appearance: none;
+	  appearance: none;
+	  margin: 10px; 	  white-space: normal; 
+  	  text-align: center; 	
+	}
+  
+	.button-with-image input[type="button"]::after {
+	  content: attr(value) !important; 	  position: absolute !important;
+	  bottom: 10px !important; 	  left: 50% ;
+	  transform: translateX(-50%)!important;
+	  width: 100%;
+	  text-align: center;
+	  color: #ffffff; 	  font-size: 1.2rem; 	}
+  
+  
+  #allTheThings input[type="button"]:focus {
+	outline: none;
+	background: #46342b !important;
 	color: #ffffff;
-	font-weight: bold;
-	font-family: "Open Sans", sans-serif;
-	font-size: 1.6rem;
-	float: right;
+  }
+  
+  #allTheThings input[type="button"]:active {
+	-webkit-transform: scale(0.9);
+	-moz-transform: scale(0.9);
+	-ms-transform: scale(0.9);
+	-o-transform: scale(0.9);
+	transform: scale(0.9);
+  }
+  
+  a{
+	  text-decoration: none;
+  }
+
+ /* 按钮样式 */
+#decorate .button-with-image {
+	background-color: #007BFF; /* 默认按钮背景色 */
+	color: white; /* 默认文字颜色 */
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	font-size: 16px;
 	cursor: pointer;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	-ms-appearance: none;
-	-o-appearance: none;
-	appearance: none;
-}
-
-#allTheThings input[type="button"]:focus {
-  outline: none;
-  background: #46342b;
-}
-
-#allTheThings input[type="button"]:active {
-  -webkit-transform: scale(0.9);
-  -moz-transform: scale(0.9);
-  -ms-transform: scale(0.9);
-  -o-transform: scale(0.9);
-  transform: scale(0.9);
-}
-
-a{
-	text-decoration: none;
-}
+	transition: background-color 0.3s ease;
+  }
+  
+  /* 鼠标悬停时 */
+  #decorate .button-with-image:hover {
+	background-color: #0056b3;
+  }
+  
+  

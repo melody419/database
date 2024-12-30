@@ -15,3 +15,32 @@
 .cd-form [required].m-pass {
   background: url("../img/ic_member_pass.svg") no-repeat 16px center, url("../img/ic_required.svg") no-repeat top right;
 }
+
+.cd-form .m-login {
+
+}
+
+#member {
+	transition: all .5s ease-in-out;
+	background-image: linear-gradient(120deg, #64553d 0%, #64553d 50%, rgb(230, 223, 215) 50%);
+	background-size: 215%;
+	background-position: 100%; /* ���閮剖����喲��憪�嚗�撠�蝔望�� #librarian */
+	transition: all .5s;
+}
+
+#librarian {
+	background-image: linear-gradient(120deg, rgb(230, 223, 215) 0%, rgb(230, 223, 215) 50%, #64553d 50%);
+	background-size: 215%;
+	background-position: 0%; /* ���閮剖��撌阡��憪� */
+	transition: all .5s;
+}
+
+#member:hover {
+	transform: scale(1.1);
+	background-position: 0%; /* 皛�曌���詨�����蝘餃�啣椰銝�嚗�撠�蝔望�� #librarian */
+}
+
+#librarian:hover {
+	transform: scale(1.1);
+	background-position: 100%; /* 皛�曌���詨�����蝘餃�啣�喃��嚗�撠�蝔望�� #member */
+}

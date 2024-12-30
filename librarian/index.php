@@ -22,7 +22,7 @@
 			</div>
 			
 			<div class="icon">
-				<input class="l-user" type="text" name="l_user" placeholder="Username" required />
+				<input class="l-user" type="text" name="l_user" placeholder="account" required />
 			</div>
 			
 			<div class="icon">
@@ -36,23 +36,28 @@
 	
 	<?php
 		if(isset($_POST['l_login']))
-		{
-			$query = $con->prepare("SELECT id FROM librarian WHERE username = ? AND password = ?;");
+		{	
+			$query = $con->prepare("SELECT * FROM librarian WHERE password = ? AND account = ?;");
 			$l_user = $_POST['l_user'];
 			$l_pass = sha1($_POST['l_pass']);
-			echo $l_pass;
-			$query->bind_param("ss", $l_user, $l_pass);
+			$query->bind_param("ss", $l_pass,$l_user);
 			$query->execute();
 			$result = $query->get_result();
+			$row = $result->fetch_assoc();
 			if(mysqli_num_rows($result) != 1)
-				echo error_without_field("Invalid username/password combination");
+				echo error_without_field("Invalid account/password combination");
 			else
 			{
-				$_SESSION['type'] = "librarian";
-				$_SESSION['id'] = mysqli_fetch_array($result)[0];
-				$_SESSION['username'] = $_POST['l_user'];
+				
+				$log_query = $con->prepare("INSERT INTO activity_logs (account, time, action) VALUES (?, NOW(), 'login(librarian)');");
+				$log_query->bind_param("s", $_POST['l_user']);
+				$log_query->execute();
+				$log_query->close();
+				$_SESSION['type'] = "librarian";		
+				$_SESSION['account'] = $_POST['l_user'];
 				header('Location: home.php');
 			}
+			$query->close();
 		}
 	?>
 	

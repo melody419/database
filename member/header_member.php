@@ -18,13 +18,13 @@
 		
 		<div class="dropdown">
 			<button class="dropbtn">
-				<p id="librarian-name"><?= htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') ?></p>
+				<p id="librarian-name"><?= htmlspecialchars($_SESSION['account'], ENT_QUOTES, 'UTF-8') ?></p>
 			</button>
 			<div class="dropdown-content">
 				<a>
 					<?php
-						$query = $con->prepare("SELECT balance FROM member WHERE username = ?;");
-						$query->bind_param("s", $_SESSION['username']);
+						$query = $con->prepare("SELECT balance FROM member WHERE account = ?;");
+						$query->bind_param("s", $_SESSION['account']);
 						$query->execute();
 						$result = $query->get_result();
 						$balance = $result->fetch_array(MYSQLI_ASSOC)['balance'] ?? 0;
@@ -32,8 +32,17 @@
 					?>
 				</a>
 				<a href="my_books.php">My books</a>
-				<a href="wish.php">My favorite</a>
-				<a href="../logout.php">Logout</a>
+				<a href="wish.php">Favorite</a>
+				
+				<a href="../logout.php" onclick="logLogout()">Logout</a>
+				<script>
+					function logLogout() {
+						var xhr = new XMLHttpRequest();
+						xhr.open("POST", "log_logout.php", true);
+						xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+						xhr.send("account=" + encodeURIComponent("<?= htmlspecialchars($_SESSION['account'], ENT_QUOTES, 'UTF-8') ?>"));
+					}
+				</script>
 			</div>
 		</div>
 	</header>

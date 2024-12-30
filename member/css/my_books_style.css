@@ -54,7 +54,7 @@
 
 .cd-form input[type="submit"]:focus {
   outline: none;
-  background: #2b3e51;
+  background: #3e251fba;
 }
 
 .cd-form input[type="submit"]:active {
@@ -89,4 +89,30 @@
   -moz-osx-font-smoothing: grayscale;
   border-radius: .25em;
   padding: 16px;
+}
+
+a {
+  color: rgb(133, 101, 57); 
+}
+
+a:visited {
+  color: rgb(75, 51, 17); 
+}
+
+.button-link {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white !important;
+  background-color: #9f685bba; /* 按鈕背景色 */
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none; /* 去掉超鏈接下劃線 */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-link:hover {
+  background-color: #523e22; /* 懸停時的背景色 */
 }

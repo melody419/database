@@ -14,7 +14,7 @@
 			
 			<div class="dropdown">
 				<button class="dropbtn">
-					<p id="librarian-name"><?php echo $_SESSION['username'] ?></p>
+					<p id="librarian-name"><?php echo $_SESSION['account'] ?></p>
 				</button>
 				<div class="dropdown-content">
 					<a href="../logout.php">Logout</a>

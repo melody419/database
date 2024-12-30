@@ -18,7 +18,7 @@ require "header_member.php";
 
 <?php
 $query = $con->prepare("SELECT book_isbn FROM borrowedbooks WHERE member = ?;");
-$query->bind_param("s", $_SESSION['username']);
+$query->bind_param("s", $_SESSION['account']);
 $query->execute();
 $result = $query->get_result();
 $rows = $result->num_rows;
@@ -34,21 +34,21 @@ if ($rows === 0) {
 	echo "<div class='error-message' id='error-message'>
 			<p id='error'></p>
 		  </div>";
-	echo "<table width='100%' cellpadding='10' cellspacing='10'>
-			<tr>
-				<th></th>
-				<th>ISBN<hr></th>
-				<th>Title<hr></th>
-				<th>Author<hr></th>
-				<th>Category<hr></th>
-				<th>Due Date<hr></th>
-			</tr>";
+	echo "<table width='100%' cellpadding='10' cellspacing='10'>";
+	echo "<tr>
+							<th></th>
+							<th style=\"background-color: #f2f2f2;\">ISBN</th>
+							<th style=\"background-color: #f2f2f2;\">Title</th>
+							<th style=\"background-color: #f2f2f2;\">Author</th>
+							<th style=\"background-color: #f2f2f2;\">Category</th>
+							<th style=\"background-color: #f2f2f2;\">Copies available</th>
+				</tr>";
 
 	$i = 0;
 	/*
-	每次調用 $result->fetch_assoc() 時，它會返回一個結果集中的一行資料，
-	並且會自動將指標移動到下一行。因此，迴圈內只調用了prepare()一次，
-	$result->fetch_assoc() 會自動依序讀取每一行資料，直到沒有更多資料可以讀取。
+	瘥�甈∟矽��� $result->fetch_assoc() ���嚗�摰����餈����銝����蝯�������銝剔��銝�銵�鞈����嚗�
+	銝虫�������芸��撠����璅�蝘餃����唬��銝�銵�������甇歹��餈游����批�芾矽��其��prepare()銝�甈∴��
+	$result->fetch_assoc() �����芸��靘�摨�霈����瘥�銝�銵�鞈����嚗���游�唳�������游��鞈������臭誑霈�������
 	*/
 	while ($row = $result->fetch_assoc()) {
 		$isbn = $row['book_isbn'];
@@ -67,12 +67,13 @@ if ($rows === 0) {
 						</label>
 					</td>";
 			echo "<td>{$isbn}</td>";
-			echo "<td>{$innerRow['title']}</td>";
+			echo "<td><a href='book_content.php?isbn={$isbn}'>{$innerRow['title']}</a></td>";
+			
 			echo "<td>{$innerRow['author']}</td>";
 			echo "<td>{$innerRow['category']}</td>";
 
 			$query = $con->prepare("SELECT time FROM borrowedbooks WHERE member = ? AND book_isbn = ?;");
-			$query->bind_param("ss", $_SESSION['username'], $isbn);
+			$query->bind_param("ss", $_SESSION['account'], $isbn);
 			$query->execute();
 			$dueDateResult = $query->get_result();
 			$dueDateRow = $dueDateResult->fetch_assoc();
@@ -84,7 +85,7 @@ if ($rows === 0) {
 						document.getElementById("error-message").style.display = "block";
 					  </script>';
 			$query = $con->prepare("DELETE FROM borrowedbooks WHERE member = ? AND book_isbn = ?;");
-			$query->bind_param("ss", $_SESSION['username'], $isbn);
+			$query->bind_param("ss", $_SESSION['account'], $isbn);
 			if (!$query->execute()) {
 				die(error_without_field("ERROR: Couldn't return the books"));
 			}
@@ -103,18 +104,18 @@ if (isset($_POST['b_return']) ) {
 			$isbn = $_POST["cb_book{$i}"];
 			
 			$query = $con->prepare("DELETE FROM borrowedbooks WHERE member = ? AND book_isbn = ?;");
-			$query->bind_param("ss", $_SESSION['username'], $isbn);
+			$query->bind_param("ss", $_SESSION['account'], $isbn);
 			if (!$query->execute()) {
 				die(error_without_field("ERROR: Couldn't return the books"));
 			}
-			$query = $con->prepare("SELECT balance FROM member WHERE username = ?");
-			$query->bind_param("s", $_SESSION['username']);
+			$query = $con->prepare("SELECT balance FROM member WHERE account = ?");
+			$query->bind_param("s", $_SESSION['account']);
 			$query->execute();
 			$memberBalance = mysqli_fetch_assoc(mysqli_stmt_get_result($query))['balance'];
 			$query->close();
 			$memberBalance=$memberBalance+1;
-			$query = $con->prepare("UPDATE member SET balance = ? WHERE username = ?");
-			$query->bind_param("is", $memberBalance, $_SESSION['username']);
+			$query = $con->prepare("UPDATE member SET balance = ? WHERE account = ?");
+			$query->bind_param("is", $memberBalance, $_SESSION['account']);
 			$query->execute();
 			$query->close(); // ?????
 			
@@ -128,6 +129,10 @@ if (isset($_POST['b_return']) ) {
 			$query->bind_param("is", $copies, $isbn);
 			$query->execute();
 			$query->close();
+			$log_query = $con->prepare("INSERT INTO activity_logs (account, time, action,book_isbn) VALUES (?, NOW(), 'returned book',?);");
+			$log_query->bind_param("ss", $_SESSION['account'], $isbn);
+			$log_query->execute();
+			$log_query->close();
 			header('Location: my_books.php');
 		}
 	}

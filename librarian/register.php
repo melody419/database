@@ -20,7 +20,7 @@
 				</div>
 				
 				<div class="icon">
-					<input class="m-user" type="text" name="m_user" id="m_user" placeholder="Username" required />
+					<input class="m-user" type="text" name="m_user" id="m_user" placeholder="account" required />
 				</div>
 				
 				<div class="icon">
@@ -45,19 +45,19 @@
 	<?php
 		if(isset($_POST['m_register']))
 		{			
-				$query = $con->prepare("SELECT username FROM librarian WHERE username = ?;");
+				$query = $con->prepare("SELECT account FROM librarian WHERE account = ?;");
 				$query->bind_param("s", $_POST['m_user']);
 				$query->execute();
 				if(mysqli_num_rows($query->get_result()) != 0)
-					echo error_with_field("The username you entered is already exist", "m_user");
+					echo error_with_field("The account you entered is already exist", "m_user");
 				else
 				{
 					// 將表單資料賦值給變數
-$m_user = $_POST['m_user'];
-$m_pass = $_POST['m_pass'];
-$m_pass1 = ($_POST['m_pass1']);
-$m_name = $_POST['m_name'];
-$m_email = $_POST['m_email'];
+					$m_user = $_POST['m_user'];
+					$m_pass = $_POST['m_pass'];
+					$m_pass1 = ($_POST['m_pass1']);
+					$m_name = $_POST['m_name'];
+					$m_email = $_POST['m_email'];
 
 					$query = $con->prepare("SELECT email FROM librarian WHERE email = ?;");
 					$query->bind_param("s", $_POST['m_email']);
@@ -68,11 +68,18 @@ $m_email = $_POST['m_email'];
 						echo error_with_field("The passwords don't match", "m_pass");
 					else
 					{
-						$query = $con->prepare("INSERT INTO librarian(username, password, name, email) VALUES(?, ?, ?, ?);");					
-// 使用變數來綁定參數	
+						$query = $con->prepare("INSERT INTO member(account, password, name, email,balance) VALUES(?, ?, ?, ?,3);");					
+						// 使用變數來綁定參數	
 						$m_pass = sha1($m_pass);
 						$query->bind_param("ssss", $m_user, $m_pass, $m_name, $m_email);
-						//$query->bind_param("ssssd", $_POST['m_user'], sha1($_POST['m_pass']), $_POST['m_name'], $_POST['m_email'], $_POST['m_balance']);
+						$query->execute();
+						$query->close();
+						
+						$query = $con->prepare("INSERT INTO librarian(account, password, email) VALUES(?, ?, ?);");					
+						// 使用變數來綁定參數	
+						$m_pass = sha1($m_pass);
+						$query->bind_param("sss", $m_user, $m_pass,  $m_email);
+
 						if($query->execute())
 							echo success("Successfully registered.");
 						else

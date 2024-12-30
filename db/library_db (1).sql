@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2024-12-24 10:56:30
+-- 產生時間： 2024-12-28 14:06:08
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `activity_logs` (
   `log_id` int(11) NOT NULL,
-  `username` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `account` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `book_isbn` char(13) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `action` varchar(50) DEFAULT NULL,
   `details` text DEFAULT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE `book` (
   `author` varchar(80) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `category` varchar(80) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `copies` int(10) UNSIGNED NOT NULL,
-  `content` longtext NOT NULL
+  `content` longblob DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -72,9 +72,8 @@ CREATE TABLE `borrowedbooks` (
 --
 
 CREATE TABLE `librarian` (
-  `username` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `account` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `name` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `email` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -85,7 +84,7 @@ CREATE TABLE `librarian` (
 --
 
 CREATE TABLE `member` (
-  `username` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `account` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` char(40) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `email` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -114,7 +113,7 @@ CREATE TABLE `wishlist` (
 ALTER TABLE `activity_logs`
   ADD PRIMARY KEY (`log_id`),
   ADD KEY `book_log` (`book_isbn`),
-  ADD KEY `member_log` (`username`);
+  ADD KEY `member_log` (`account`);
 
 --
 -- 資料表索引 `book`
@@ -134,14 +133,14 @@ ALTER TABLE `borrowedbooks`
 -- 資料表索引 `librarian`
 --
 ALTER TABLE `librarian`
-  ADD PRIMARY KEY (`username`),
+  ADD PRIMARY KEY (`account`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
 -- 資料表索引 `member`
 --
 ALTER TABLE `member`
-  ADD PRIMARY KEY (`username`),
+  ADD PRIMARY KEY (`account`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
@@ -183,27 +182,27 @@ ALTER TABLE `wishlist`
 --
 ALTER TABLE `activity_logs`
   ADD CONSTRAINT `book_log` FOREIGN KEY (`book_isbn`) REFERENCES `book` (`isbn`) ON DELETE SET NULL ON UPDATE CASCADE,
-  ADD CONSTRAINT `member_log` FOREIGN KEY (`username`) REFERENCES `member` (`username`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `member_log` FOREIGN KEY (`account`) REFERENCES `member` (`account`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- 資料表的限制式 `borrowedbooks`
 --
 ALTER TABLE `borrowedbooks`
   ADD CONSTRAINT `book` FOREIGN KEY (`book_isbn`) REFERENCES `book` (`isbn`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `username` FOREIGN KEY (`member`) REFERENCES `member` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `username` FOREIGN KEY (`member`) REFERENCES `member` (`account`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- 資料表的限制式 `librarian`
 --
 ALTER TABLE `librarian`
-  ADD CONSTRAINT `member_lib` FOREIGN KEY (`username`) REFERENCES `member` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `member_lib` FOREIGN KEY (`account`) REFERENCES `member` (`account`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- 資料表的限制式 `wishlist`
 --
 ALTER TABLE `wishlist`
   ADD CONSTRAINT `book_wish` FOREIGN KEY (`book_isbn`) REFERENCES `book` (`isbn`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `namee` FOREIGN KEY (`member`) REFERENCES `member` (`username`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `namee` FOREIGN KEY (`member`) REFERENCES `member` (`account`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

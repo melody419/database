@@ -3,15 +3,15 @@ declare(strict_types=1);
 //PHP 會強制要求這些類型必須完全匹配，否則會拋出 TypeError 異常。
 require "../db_connect.php";
 require "../message_display.php";
-require "verify_member.php";
-require "header_member.php";
+require "verify_librarian.php";
+require "header_librarian.php";
 ?>
 
 <html>
 <head>
 	<title>Welcome</title>
 	<link rel="stylesheet" type="text/css" href="../css/global_styles.css">
-	<link rel="stylesheet" type="text/css" href="css/home_style.css">
+	<link rel="stylesheet" type="text/css" href="../member/css/home_style.css">
 	<link rel="stylesheet" type="text/css" href="../css/custom_radio_button_style.css">
 </head>
 <body>
@@ -71,7 +71,7 @@ require "header_member.php";
 		echo "<h2 align='center'>No books available</h2>";
 	} else {
 		echo "<form class='cd-form' method='POST' action='#'>";
-		echo "<legend>Available books</legend>";
+		echo "<legend>All books</legend>";
 		echo "<div class='error-message' id='error-message'>
 				<p id='error'></p>
 			</div>";
@@ -100,95 +100,67 @@ require "header_member.php";
 				echo "</tr><tr><td colspan='7'><hr style='border: 0; border-top: 1.5px solid #301602;'></td></tr>";
 			}
 		echo "</table>";
-		echo "<br /><br /><input type='submit' name='m_request' value='Borrow book' />";
+		echo "<br /><br /><input type='submit' name='m_request' value='detele book' />";
 		echo "&nbsp;&nbsp;&nbsp;&nbsp;"; // 插入4個空格
-		echo "<input type='submit' name='m_favor' value='Add to favorites' />";
 		echo "</form>";
 	}
 
 	if (isset($_POST['m_request'])) {
-		$query1 = $con->prepare("SELECT balance FROM member WHERE account = ?");
-		$query1->bind_param("s", $_SESSION['account']);
-		$query1->execute();
-		$query1->bind_result($balance); // 將結果綁定到變數 $balance
-		$query1->fetch();              // 提取結果
+        $query->close();
+		$query = $con->prepare("SELECT balance FROM member WHERE account = ?");
+		$query->bind_param("s", $_SESSION['account']);
+		$query->execute();
+		$query->bind_result($balance); // 將結果綁定到變數 $balance
+		$query->fetch();              // 提取結果
 		$selectedBook = $_POST['rd_book'] ?? null;
 		if (empty($selectedBook)) {
 			$_SESSION['error_message'] = "Please select a book to issue";
 			//echo error_without_field("Please select a book to issue");
 		}
- 		else if ($balance == 0) {
-			$_SESSION['error_message'] = "You have no balance left to borrow books";
-			//echo error_without_field("You are already borrowing 3 books");
-			$query1->close();
-		}
 		else {
-			$query1->close();
-//? 是一個佔位符，將在後續使用 bind_param 方法綁定具體的 isbn 值。
-			$query = $con->prepare("SELECT copies FROM book WHERE isbn = ?");
-			$query->bind_param("s", $selectedBook);//string
-			$query->execute();
+            $query->close();
+            // 先取得書籍資訊
+            $query = $con->prepare("SELECT title FROM book WHERE isbn = ?");
+            $query->bind_param("s", $selectedBook);
+            $query->execute();
+            $query->bind_result($bookTitle);
+            $query->fetch();
+            $query->close();
 
-			$copies = mysqli_fetch_assoc(mysqli_stmt_get_result($query))['copies'];
-			$query->close();
-			if ($copies === 0) {
-				$_SESSION['error_message'] = "No copies of the selected book are available";
-				//echo error_without_field("No copies of the selected book are available");
-			} else {
-				$query = $con->prepare("SELECT book_isbn FROM borrowedbooks WHERE member = ?");
-				$query->bind_param("s", $_SESSION['account']);
-				$query->execute();
-				$result = $query->get_result();
-						$alreadyIssued = false;
-						while ($row = mysqli_fetch_assoc($result)) {
-							if (strcmp($row['book_isbn'], $selectedBook) === 0) {
-								$alreadyIssued = true;
-								break;
-							}
-						}
-						if ($alreadyIssued) {
-							$_SESSION['error_message'] = "You have already issued a copy of this book";
-							//echo error_without_field("You have already issued a copy of this book");
-						
-						} else {
-							$query->close(); // 釋放資源
-							$query = $con->prepare("SELECT balance FROM member WHERE account = ?");
-							$query->bind_param("s", $_SESSION['account']);
-							$query->execute();
-							$memberBalance = mysqli_fetch_assoc(mysqli_stmt_get_result($query))['balance'];
-							$query->close();
-							$memberBalance=$memberBalance-1;
-							$query = $con->prepare("UPDATE member SET balance = ? WHERE account = ?");
-							$query->bind_param("is", $memberBalance, $_SESSION['account']);
-							$query->execute();
-							$query->close(); // 釋放資源
 
-							$query = $con->prepare("SELECT copies FROM book WHERE isbn = ?");
-							$query->bind_param("s", $selectedBook);
-							$query->execute();
-							$copies = mysqli_fetch_assoc(mysqli_stmt_get_result($query))['copies'];
-							$query->close();
-							$copies=$copies-1;
-							$query = $con->prepare("UPDATE book SET copies = ? WHERE isbn = ?");
-							$query->bind_param("is", $copies, $selectedBook);
-							$query->execute();
-							$query->close();
-
-							$query = $con->prepare("INSERT INTO borrowedbooks(member, book_isbn) VALUES(?, ?)");
-							$query->bind_param("ss", $_SESSION['account'], $selectedBook);
-							if (!$query->execute()) {
-								$_SESSION['error_message'] = "ERROR: Couldn't request book";
-								//echo error_without_field("ERROR: Couldn't request book");
-							} else {
-								$log_query = $con->prepare("INSERT INTO activity_logs (account, time, action,book_isbn) VALUES (?, NOW(), 'borrowed book',?);");
-								$log_query->bind_param("ss", $_SESSION['account'], $selectedBook);
-								$log_query->execute();
-								$log_query->close();	
-								$_SESSION['success_message'] = "Book successfully requested.";
-							}							
-						}
-									
+            
+			$log_query = $con->prepare("INSERT INTO activity_logs (account, time, action, details) VALUES (?, NOW(), 'deleted book', ?);");
+			$log_query->bind_param("ss", $_SESSION['account'], $selectedBook);
+			if (!$log_query->execute()) {
+				$_SESSION['error_message'] = "Couldn't log the deletion";
+				die();
 			}
+            $log_query->close();
+
+            $query1 = $con->prepare("SELECT member FROM borrowedbooks WHERE book_isbn  = ?");
+            $query1->bind_param("s", $selectedBook);
+            $query1->execute();
+            $result1 = mysqli_stmt_get_result($query1);
+            while ($row1 = mysqli_fetch_assoc($result1)) {
+                $member = $row1['member'];
+                $update_query = $con->prepare("UPDATE member SET balance = balance + 1 WHERE account = ?");
+                $update_query->bind_param("s", $member);
+                $update_query->execute();
+                $update_query->close();
+            }
+            $query1->close();
+
+            $query = $con->prepare("DELETE FROM book WHERE isbn = ?");
+            $query->bind_param("s", $selectedBook);
+            if (!$query->execute()) {
+                $_SESSION['error_message'] = "Couldn't delete book";
+                die();
+            }
+            else
+                $_SESSION['success_message'] = "Book $bookTitle deleted successfully";
+						
+									
+			
 		}
 		header("Location: " . $_SERVER['REQUEST_URI']);
 		exit(); // 停止腳本執行
@@ -200,20 +172,6 @@ require "header_member.php";
 	if (isset($_SESSION['error_message'])) {
 		echo error_without_field($_SESSION['error_message']);
 		unset($_SESSION['error_message']); // 皜���方�����
-	}
-	if (isset($_POST['m_favor'])) {
-             // 提取結果
-		$selectedBook = $_POST['rd_book'] ?? null;
-
-		$query = $con->prepare("INSERT INTO wishlist(member, book_isbn) VALUES(?, ?)");
-		$query->bind_param("ss", $_SESSION['account'], $selectedBook);
-		if (!$query->execute()) {
-			$_SESSION['error_message'] = "ERROR: Couldn't insert into wishlist";
-			//echo error_without_field("ERROR: Couldn't insert into wishlist");
-		} else {
-			 $_SESSION['success_message'] = "You have successfully added this book to your collection.";
-			//echo success("You have successfully added this book to your collection.");
-		}
 	}
 	ob_end_flush();
 				// }
