@@ -94,12 +94,6 @@ if (isset($_POST['b_delete'])) {
 				$update_query->close();
 			}
 			$query->close();
-			/*
-			$delete_query = $con->prepare("DELETE FROM borrowedbooks WHERE member = ?;");
-			$delete_query->bind_param("s", $account);
-			$delete_query->execute();
-			$delete_query->close();*/
-
 			$query = $con->prepare("DELETE FROM member WHERE account = ?;");
 			$query->bind_param("s", $account);
 			if (!$query->execute()) {
